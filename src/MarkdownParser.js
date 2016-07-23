@@ -502,6 +502,13 @@ InlineLexer.prototype.parse = function(src) {
       continue;
     }
 
+    // mention
+    if ((cap = this.rules.mention.exec(src))) {
+      src = src.substring(cap[0].length);
+      out.appendChild(this.renderer.text(new TextNode(cap[0])));
+      continue;
+    }
+
     // link
     if ((cap = this.rules.link.exec(src))) {
       src = src.substring(cap[0].length);
