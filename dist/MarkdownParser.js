@@ -349,7 +349,7 @@ Lexer.prototype.token = function (src, top, bq) {
 
 var inline = {
   escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
-  mention: /@\[(inside)\]\(href\)/,
+  mention: /^[\s\S]*?@\[(inside)\]\(href\)(?!\[\s\S]*$)/,
   link: /^!?\[(inside)\]\(href\)/,
   reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
   nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
@@ -459,6 +459,7 @@ InlineLexer.prototype.parse = function (src) {
   while (src) {
     // escape
     if (cap = this.rules.escape.exec(src)) {
+      console.log('1');
       src = src.substring(cap[0].length);
       out.appendChild(new _syntheticDom.TextNode(cap[1]));
       continue;
@@ -466,13 +467,17 @@ InlineLexer.prototype.parse = function (src) {
 
     // mention
     if (cap = this.rules.mention.exec(src)) {
+      console.log('2');
+      console.log('cap', cap);
       src = src.substring(cap[0].length);
+      console.log('src', src);
       out.appendChild(this.renderer.text(new _syntheticDom.TextNode(cap[0])));
       continue;
     }
 
     // link
     if (cap = this.rules.link.exec(src)) {
+      console.log('3');
       src = src.substring(cap[0].length);
       this.inLink = true;
       out.appendChild(this.outputLink(cap, { href: cap[2], title: cap[3] }));
@@ -482,6 +487,7 @@ InlineLexer.prototype.parse = function (src) {
 
     // reflink, nolink
     if ((cap = this.rules.reflink.exec(src)) || (cap = this.rules.nolink.exec(src))) {
+      console.log('4');
       src = src.substring(cap[0].length);
       link = (cap[2] || cap[1]).replace(/\s+/g, ' ');
       link = this.links[link.toLowerCase()];
@@ -498,6 +504,7 @@ InlineLexer.prototype.parse = function (src) {
 
     // strong
     if (cap = this.rules.strong.exec(src)) {
+      console.log('5');
       src = src.substring(cap[0].length);
       out.appendChild(this.renderer.strong(this.parse(cap[2] || cap[1])));
       continue;
@@ -505,6 +512,7 @@ InlineLexer.prototype.parse = function (src) {
 
     // em
     if (cap = this.rules.em.exec(src)) {
+      console.log('6');
       src = src.substring(cap[0].length);
       out.appendChild(this.renderer.em(this.parse(cap[2] || cap[1])));
       continue;

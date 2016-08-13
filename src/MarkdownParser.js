@@ -378,7 +378,7 @@ Lexer.prototype.token = function(src, top, bq) {
 
 var inline = {
   escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
-  mention: /@\[(inside)\]\(href\)/,
+  mention: /^[\s\S]*?@\[(inside)\]\(href\)(?!\[\s\S]*$)/,
   link: /^!?\[(inside)\]\(href\)/,
   reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
   nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
